@@ -21,4 +21,18 @@ public class MainTests extends BaseTests {
         String code = mainPage.getCode();
         Assert.assertTrue(Pattern.compile(CHAT_CODE_REGEX).matcher(code).matches());
     }
+
+    /**
+     * TC-MAIN-002
+     */
+    @Test
+    public void testCodeDelete() {
+        MainPage mainPage = MainPage.open();
+        mainPage.generateCode();
+        String code = mainPage.getCode();
+        Assert.assertTrue(Pattern.compile(CHAT_CODE_REGEX).matcher(code).matches());
+        mainPage.deleteCode();
+        code = mainPage.getCode();
+        Assert.assertTrue(code.isEmpty());
+    }
 }

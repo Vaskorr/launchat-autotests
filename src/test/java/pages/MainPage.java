@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static utils.Consts.BASE_URL;
 
 public class MainPage {
-    private final SelenideElement generateCodeButton = $("button").shouldHave(text("Сгенерировать"));
+    private final SelenideElement generateDeleteCodeButton = $("button").shouldHave(text("Сгенерировать"));
     private final SelenideElement codeTextField = $("input");
 
     public static MainPage open() {
@@ -18,7 +18,11 @@ public class MainPage {
     }
 
     public void generateCode() {
-        generateCodeButton.click();
+        generateDeleteCodeButton.click();
+    }
+
+    public void deleteCode() {
+        generateDeleteCodeButton.click();
     }
 
     public String getCode() {
