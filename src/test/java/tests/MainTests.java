@@ -2,6 +2,7 @@ package tests;
 
 import org.junit.Assert;
 import org.junit.Test;
+import pages.ChatEntryPage;
 import pages.MainPage;
 import utils.BaseTests;
 
@@ -34,5 +35,19 @@ public class MainTests extends BaseTests {
         mainPage.deleteCode();
         code = mainPage.getCode();
         Assert.assertTrue(code.isEmpty());
+    }
+
+    /**
+     * TC-MAIN-003
+     */
+    @Test
+    public void testInitializeButton() {
+        MainPage mainPage = MainPage.open();
+        mainPage.generateCode();
+        String code = mainPage.getCode();
+        Assert.assertTrue(Pattern.compile(CHAT_CODE_REGEX).matcher(code).matches());
+        ChatEntryPage chatEntryPage = mainPage.initializeConnection();
+        String pageUrl = chatEntryPage.getCurrentUrl();
+        Assert.assertTrue(pageUrl.contains("chat/" + code + "/entry"));
     }
 }
