@@ -20,6 +20,9 @@ public class MainPage extends BasePage {
     private final SelenideElement initializeButton = $$("button")
             .filterBy(text("Инициировать подключение"))
             .first();
+    private final SelenideElement aboutButton = $$("li")
+            .filterBy(text("О проекте"))
+            .first();
     private final SelenideElement codeTextField = $("input");
 
     public static MainPage open() {
@@ -46,5 +49,10 @@ public class MainPage extends BasePage {
 
     public Boolean isInitializeButtonEnabled() {
         return initializeButton.isEnabled();
+    }
+
+    public AboutPage openAbout() {
+        aboutButton.click();
+        return new AboutPage();
     }
 }

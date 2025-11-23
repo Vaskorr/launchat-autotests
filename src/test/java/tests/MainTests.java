@@ -2,6 +2,7 @@ package tests;
 
 import org.junit.Assert;
 import org.junit.Test;
+import pages.AboutPage;
 import pages.ChatEntryPage;
 import pages.MainPage;
 import utils.BaseTests;
@@ -60,5 +61,16 @@ public class MainTests extends BaseTests {
         Assert.assertFalse(mainPage.isInitializeButtonEnabled());
         mainPage.generateCode();
         Assert.assertTrue(mainPage.isInitializeButtonEnabled());
+    }
+
+    /**
+     * TC-MAIN-005
+     */
+    @Test
+    public void testAboutButton() {
+        MainPage mainPage = MainPage.open();
+        AboutPage aboutPage = mainPage.openAbout();
+        System.out.println(aboutPage.getCurrentUrl());
+        Assert.assertTrue(aboutPage.getCurrentUrl().contains("about"));
     }
 }
