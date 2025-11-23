@@ -43,4 +43,8 @@ public class MainPage extends BasePage {
     public String getCode() {
         return codeTextField.getValue();
     }
+
+    public Boolean isInitializeButtonEnabled() {
+        return initializeButton.isEnabled();
+    }
 }

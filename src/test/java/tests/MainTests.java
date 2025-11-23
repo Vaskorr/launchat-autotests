@@ -50,4 +50,15 @@ public class MainTests extends BaseTests {
         String pageUrl = chatEntryPage.getCurrentUrl();
         Assert.assertTrue(pageUrl.contains("chat/" + code + "/entry"));
     }
+
+    /**
+     * TC-MAIN-004
+     */
+    @Test
+    public void testInactiveInitializeButton() {
+        MainPage mainPage = MainPage.open();
+        Assert.assertFalse(mainPage.isInitializeButtonEnabled());
+        mainPage.generateCode();
+        Assert.assertTrue(mainPage.isInitializeButtonEnabled());
+    }
 }
