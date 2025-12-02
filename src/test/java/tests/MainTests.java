@@ -1,6 +1,8 @@
 package tests;
 
+import com.codeborne.selenide.junit.ScreenShooter;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import pages.AboutPage;
 import pages.ChatEntryPage;
@@ -70,7 +72,6 @@ public class MainTests extends BaseTests {
     public void testAboutButton() {
         MainPage mainPage = MainPage.open();
         AboutPage aboutPage = mainPage.openAbout();
-        System.out.println(aboutPage.getCurrentUrl());
         Assert.assertTrue(aboutPage.getCurrentUrl().contains("about"));
     }
 }
