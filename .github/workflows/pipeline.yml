@@ -5,15 +5,14 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # Для ручного запуска
+  workflow_dispatch:
 
 permissions:
-  contents: write
   pages: write
   id-token: write
 
 jobs:
-  test:
+  test-and-generate:
     runs-on: ubuntu-latest
     
     steps:
@@ -35,17 +34,39 @@ jobs:
       run: |
         mvn allure:report
         
-    - name: Upload report to GitHub Pages
+    - name: Prepare Allure Report for GitHub Pages
+      run: |
+        # Копируем отчет
+        mkdir -p ./_site
+        cp -r target/site/allure-maven-plugin/* ./_site/
+        
+        # Создаем файлы для GitHub Pages
+        touch ./_site/.nojekyll
+        
+        # Если в отчете нет index.html в корне, создаем редирект
+        if [ ! -f "./_site/index.html" ]; then
+          echo '<!DOCTYPE html>
+          <html>
+          <head>
+            <meta http-equiv="refresh" content="0; url=allure-maven-plugin/index.html">
+          </head>
+          <body>
+            <p>Redirecting to <a href="allure-maven-plugin/index.html">Allure Report</a></p>
+          </body>
+          </html>' > ./_site/index.html
+        fi
+        
+    - name: Upload artifact for deployment
       uses: actions/upload-pages-artifact@v3
       with:
-        path: target/site/allure-maven-plugin/
-        
+        path: ./_site
+
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: test
+    needs: test-and-generate
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
