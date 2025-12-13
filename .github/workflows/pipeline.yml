@@ -35,31 +35,6 @@ jobs:
       run: |
         mvn allure:report
         
-    - name: Prepare report for GitHub Pages
-      run: |
-        # Создаем временную папку для деплоя
-        mkdir -p public-report
-        
-        # Копируем отчет
-        cp -r target/site/allure-maven-plugin/* public-report/
-        
-        # Создаем правильный index.html в корне
-        echo '<!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Allure Test Report</title>
-            <meta http-equiv="refresh" content="0; url=./index.html">
-            <script>
-                window.location.href = "index.html";
-            </script>
-        </head>
-        <body>
-            <h1>Allure Test Report</h1>
-            <p>If you are not redirected, <a href="index.html">click here</a>.</p>
-        </body>
-        </html>' > public-report/index.html
-        
     - name: Upload report to GitHub Pages
       uses: actions/upload-pages-artifact@v3
       with:
