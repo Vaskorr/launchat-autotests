@@ -1,0 +1,52 @@
+name: Run Tests and Deploy Allure Report
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Для ручного запуска
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Run tests with Allure
+      run: |
+        mvn clean test
+        
+    - name: Generate Allure Report
+      run: |
+        mvn allure:report
+        
+    - name: Upload report to GitHub Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: target/site/allure-maven-plugin/
+        
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
