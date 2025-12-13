@@ -8,15 +8,20 @@ import java.io.ByteArrayInputStream;
 
 public class ScreenshotMaker {
 
-    private void takeScreenshot(String name) {
+    public void takeScreenshot(String name) {
         try {
-            Thread.sleep(1000);
+            // Добавляем небольшую задержку перед скриншотом для полной загрузки страницы
+            Thread.sleep(500);
             byte[] screenshot = Selenide.screenshot(OutputType.BYTES);
-            Allure.addAttachment(name, "image/png",
-                    new ByteArrayInputStream(screenshot), "png");
+            if (screenshot != null && screenshot.length > 0) {
+                Allure.addAttachment(name, "image/png",
+                        new ByteArrayInputStream(screenshot), "png");
+                System.out.println("Скриншот создан: " + name + ", размер: " + screenshot.length + " байт");
+            } else {
+                System.err.println("Не удалось создать скриншот: пустое изображение");
+            }
         } catch (Exception e) {
-            System.err.println("Screenshot failed: " + e.getMessage());
+            System.err.println("Не удалось создать скриншот '" + name + "': " + e.getMessage());
         }
     }
 }
-

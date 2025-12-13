@@ -58,10 +58,6 @@ abstract public class BaseTests {
         Configuration.savePageSource = false;
         Configuration.browser = "chrome";
         Configuration.headless = true;
-    }
-
-    @Before
-    public void init() {
         Configuration.browserSize = "1920x1080";
     }
 }

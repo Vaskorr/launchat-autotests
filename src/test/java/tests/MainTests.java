@@ -1,19 +1,22 @@
 package tests;
 
-import com.codeborne.selenide.junit.ScreenShooter;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
 import pages.AboutPage;
 import pages.ChatEntryPage;
 import pages.MainPage;
 import utils.BaseTests;
+import utils.ScreenshotMaker;
 
 import java.util.regex.Pattern;
 
 import static utils.Consts.CHAT_CODE_REGEX;
 
 public class MainTests extends BaseTests {
+
+    private final ScreenshotMaker screenshotMaker = new ScreenshotMaker();
 
     /**
      * TC-MAIN-001
@@ -73,5 +76,32 @@ public class MainTests extends BaseTests {
         MainPage mainPage = MainPage.open();
         AboutPage aboutPage = mainPage.openAbout();
         Assert.assertTrue(aboutPage.getCurrentUrl().contains("about"));
+    }
+
+    /**
+     * TC-MAIN-006
+     */
+    @Test
+    public void testScreenshotsInDifferentResolutions() {
+        String originalSize = Configuration.browserSize;
+        String[] resolutions = {"1920x1080", "1280x720", "892x873", "390x844", "320x480"};
+
+        for (String resolution : resolutions) {
+            Configuration.browserSize = resolution;
+            Selenide.closeWebDriver();
+            MainPage mainPage = MainPage.open();
+            screenshotMaker.takeScreenshot("Скриншот в разрешении " + resolution);
+            Assert.assertTrue(mainPage.getCurrentUrl().contains("launchat"));
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        Configuration.browserSize = originalSize;
+        Selenide.closeWebDriver();
+        MainPage.open();
     }
 }
